@@ -1,0 +1,26 @@
+[
+    {
+        "name": "France",
+        "code": "FR"
+    },
+    {
+        "name": "Germany",
+        "code": "DE"
+    },
+    {
+        "name": "Italy",
+        "code": "IT"
+    },
+    {
+        "name": "Spain",
+        "code": "ES"
+    },
+    {
+        "name": "United Kingdom",
+        "code": "GB"
+    },
+    {
+        "name": "United States",
+        "code": "US"
+    }
+]
