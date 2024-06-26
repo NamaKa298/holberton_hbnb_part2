@@ -1,35 +1,32 @@
-import json
+from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import uuid
 
+db = SQLAlchemy()
 data = {}
 
-class BaseModel:
+class BaseModel(db.Model):
     """Represent the base class for all models in the application"""
 
-    def __init__(self, *args, **kwargs) -> None:
-        """
-            Initialize a new instance of the BaseModel class
-            Please don't instantiate this class directly,
-            instead use it as a base class for other classes
-        """
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+    __abstract__ = True
 
-        if (kwargs):
-            for key, value in kwargs.items():
-                if key in ["created_at", "updated_at"]:
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __init__(self, **kwargs):
+        """Initialize a new instance of the BaseModel class"""
+        super().__init__(**kwargs)
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                if key in ["created_at", "updated_at"] and isinstance(value, str):
                     value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-                if key != "__class__":
-                    setattr(self, key, value)
-        
-        if (args):
-            for key, value in args.items():
                 setattr(self, key, value)
+
     
     @classmethod
     def exists(cls, entity):
+        # Assuming 'data' is a global or accessible dictionary holding entities
         cls_entities = data.get(cls.__name__)
         return (
             True if cls_entities 
@@ -38,17 +35,13 @@ class BaseModel:
         )
 
     def to_dict(self):
-        """Return a dictionary representation of the instance for JSON"""
-        #self.created_at.isoformat()
-        #self.updated_at.isoformat()
+        """Return a dictionary representation of the instance for JSON serialization."""
         data = {}
-
         for key, value in self.__dict__.items():
-            if (key == 'created_at'):
-                data['created_at'] = self.created_at.isoformat()
-            elif (key == 'updated_at'):
-                data['updated_at'] = self.updated_at.isoformat()
-            elif (key != '__class__'):
+            if key.startswith('_'):
+                continue  # Skip internal attributes
+            if isinstance(value, datetime):
+                data[key] = value.isoformat()
+            else:
                 data[key] = value
-
         return data

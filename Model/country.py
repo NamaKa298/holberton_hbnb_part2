@@ -1,12 +1,14 @@
 from Model.BaseModel import BaseModel
+from flask_sqlalchemy import SQLAlchemy
 
-class Country():
+db = SQLAlchemy()
+
+class Country(BaseModel):
+    __tablename__ = 'countries'
+
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = db.Column(db.String(100), nullable=False)
+    population = db.Column(db.Integer)
+
     def __init__(self, *args, **kwargs):
-        if (kwargs):
-            for key, value in kwargs.items():
-                if key != "__class__":
-                    setattr(self, key, value)
-        
-        if (args):
-            for key, value in args.items():
-                setattr(self, key, value)
+        super().__init__(*args, **kwargs)
