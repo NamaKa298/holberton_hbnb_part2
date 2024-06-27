@@ -1,8 +1,8 @@
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, String, DateTime
+from API.v1.app import db
 from datetime import datetime
 import uuid
 
-db = SQLAlchemy()
 data = {}
 
 class BaseModel(db.Model):
@@ -10,13 +10,13 @@ class BaseModel(db.Model):
 
     __abstract__ = True
 
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def __init__(self, **kwargs):
         """Initialize a new instance of the BaseModel class"""
-        super().__init__(**kwargs)
+        super().__init__()
         for key, value in kwargs.items():
             if hasattr(self, key):
                 if key in ["created_at", "updated_at"] and isinstance(value, str):

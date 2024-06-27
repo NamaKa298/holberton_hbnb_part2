@@ -1,11 +1,12 @@
-import json
 from datetime import datetime
 from typing import TypeVar, List, Dict
 from Persistence.interface_persistence import IPersistenceManager
 from flask_sqlalchemy import SQLAlchemy
+from API.v1.app import db, app
 import os
+import json
 
-db = SQLAlchemy()
+# db = SQLAlchemy()
 
 class DataManager(IPersistenceManager):
 
@@ -31,9 +32,11 @@ class DataManager(IPersistenceManager):
             self.__load_all_from_file()
 
     def __load_all_from_db(self):
-        for entity_name, entity_class in self.classes.items():
-            entities = entity_class.query.all()
-            self.storage[entity_name] = {entity.id: entity for entity in entities}
+        with app.app_context():
+            db.create_all()
+            for entity_name, entity_class in self.classes.items():
+                entities = db.session.query(entity_class).all()
+                self.storage[entity_name] = {entity.id: entity for entity in entities}
 
     def __load_all_from_file(self):
         data = self.read_database()
@@ -60,13 +63,13 @@ class DataManager(IPersistenceManager):
 
     def save(self, entity):
         entity_type = type(entity).__name__
+        if entity_type not in self.storage:
+            self.storage[entity_type] = {}
+        self.storage[entity_type][entity.id] = entity
         if self.use_database:
             db.session.add(entity)
             db.session.commit()
         else:
-            if entity_type not in self.storage:
-                self.storage[entity_type] = {}
-            self.storage[entity_type][entity.id] = entity
             self.save_all()
 
     def save_all(self):
@@ -100,8 +103,10 @@ class DataManager(IPersistenceManager):
 
     def delete(self, entity, entity_type):
         if self.use_database:
-            db.session.delete(entity)
-            db.session.commit()
+            if entity_type in self.storage and entity.id in self.storage[entity_type]:
+                del self.storage[entity_type][entity.id]
+                db.session.delete(entity)
+                db.session.commit()
         else:
             if entity_type in self.storage and entity.id in self.storage[entity_type]:
                 del self.storage[entity_type][entity.id]

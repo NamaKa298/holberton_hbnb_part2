@@ -1,19 +1,19 @@
 from Model.BaseModel import BaseModel
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, String, Boolean
+from sqlalchemy.orm import relationship
+from uuid import uuid4
 import re
-
-db = SQLAlchemy()
 
 class User(BaseModel):
     __tablename__ = 'users'
 
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=False)
-    is_admin = db.Column(db.Boolean, default=False)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    email = Column(String(120), unique=True, nullable=False)
+    password = Column(String(128), nullable=False)
+    is_admin = Column(Boolean, default=False)
 
-    places = db.relationship('Place', backref='user', lazy=True)
-    reviews = db.relationship('Review', backref='user', lazy=True)
+    # places = relationship('Place', backref='users', lazy=True)
+    # reviews = relationship('Review', backref='users', lazy=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
