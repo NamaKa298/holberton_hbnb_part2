@@ -18,10 +18,5 @@ app.register_blueprint(auth_blueprint, url_prefix='/auth')
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
-@app.before_first_request
-def initialize_database():
-    """Crée toutes les tables définies dans les modèles si elles n'existent pas."""
-    db.create_all()
-
 if __name__ == '__main__':
     app.run()
