@@ -1,8 +1,11 @@
 from Model.BaseModel import BaseModel
 from sqlalchemy import Column, String, Boolean
 from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String, Boolean, Integer
 from uuid import uuid4
 import re
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 class User(BaseModel):
     __tablename__ = 'users'
@@ -12,9 +15,6 @@ class User(BaseModel):
     password = Column(String(128), nullable=False)
     is_admin = Column(Boolean, default=False)
 
-    # places = relationship('Place', backref='users', lazy=True)
-    # reviews = relationship('Review', backref='users', lazy=True)
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -22,3 +22,13 @@ class User(BaseModel):
     def is_valid_email(email):
         """Check if email is valid"""
         return bool(re.match(r"[^@]+@[^@]+\.[^@]+", email))
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
+    @classmethod
+    def find_by_email(cls, email):
+        return cls.query.filter_by(email=email).first()
