@@ -1,6 +1,38 @@
 import unittest
 from Model.user import User
 from Model.place import Places
+from Persistence.datamanager import data_manager
+from API.v1.app import db
+from sqlalchemy.exc import IntegrityError
+
+class DatabaseOperationsTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # Configuration pour utiliser une base de données de test
+        db.create_all()
+
+    @classmethod
+    def tearDownClass(cls):
+        # Nettoyage après les tests
+        db.session.remove()
+        db.drop_all()
+
+    def test_create_user_db(self):
+        # Test de création d'un utilisateur via la base de données
+        user = User(email="test@example.com")
+        db.session.add(user)
+        db.session.commit()
+        self.assertIsNotNone(user.id)
+
+    def test_duplicate_user_db(self):
+        # Test de la contrainte d'unicité de l'email
+        user1 = User(email="unique@example.com")
+        db.session.add(user1)
+        db.session.commit()
+        user2 = User(email="unique@example.com")
+        db.session.add(user2)
+        with self.assertRaises(IntegrityError):
+            db.session.commit()
 
 class TestUser(unittest.TestCase):
     def test_create_user(self):

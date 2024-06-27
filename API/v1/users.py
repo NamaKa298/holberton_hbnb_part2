@@ -5,10 +5,20 @@ from Model.user import User
 
 @app.route('/users', methods=['POST'])
 def create_user():
-    data = request.get_json()
-    user = User(**data)
-    user_repository.save(user)
-    return jsonify(user.to_dict()), 201
+    try:
+        data = request.get_json()
+        user = User(**data)
+        user_repository.save(user)
+        return jsonify({
+            "id": user.id,
+            "email": user.email,
+            "password": user.password,
+            "is_admin": user.is_admin,
+            "created_at": user.created_at,
+            "updated_at": user.updated_at
+        }), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 @app.route('/users', methods=['GET'])
 def read_users():
