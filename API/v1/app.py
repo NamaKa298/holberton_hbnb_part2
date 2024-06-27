@@ -2,15 +2,26 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from API.v1.auth import auth as auth_blueprint
-
+from config import DevelopmentConfig, ProductionConfig, TestingConfig
+import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///development.db'
+
+if os.getenv('ENV') == 'development':
+    app.config.from_object(DevelopmentConfig)
+elif os.getenv('ENV') == 'testing':
+    app.config.from_object(TestingConfig) 
+else:
+    app.config.from_object(ProductionConfig)
 app.config['JWT_SECRET_KEY'] = 'motdepasse'
 app.register_blueprint(auth_blueprint, url_prefix='/auth')
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
+@app.before_first_request
+def initialize_database():
+    """Crée toutes les tables définies dans les modèles si elles n'existent pas."""
+    db.create_all()
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+if __name__ == '__main__':
+    app.run()
