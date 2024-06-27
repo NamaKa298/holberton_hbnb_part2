@@ -14,10 +14,5 @@ else:
 
 db = SQLAlchemy(app)
 
-@app.before_first_request
-def initialize_database():
-    """Crée toutes les tables définies dans les modèles si elles n'existent pas."""
-    db.create_all()
-
 if __name__ == '__main__':
     app.run()
