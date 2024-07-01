@@ -6,8 +6,6 @@ from API.v1.app import db, app
 import os
 import json
 
-# db = SQLAlchemy()
-
 class DataManager(IPersistenceManager):
 
     def __init__(self):
@@ -20,6 +18,7 @@ class DataManager(IPersistenceManager):
             "Review": Model.Review,
             "User": Model.User,
         }
+        self._loaded = True
         self.storage = {}  # For the sake of simplicity, we'll use a dictionary as our storage
 
         # Check configuration for database usage
@@ -30,6 +29,9 @@ class DataManager(IPersistenceManager):
             self.__load_all_from_db()
         else:
             self.__load_all_from_file()
+
+    async def loaded(self):
+        return self._loaded
 
     def __load_all_from_db(self):
         with app.app_context():
@@ -112,4 +114,3 @@ class DataManager(IPersistenceManager):
                 del self.storage[entity_type][entity.id]
                 self.save_all()
 
-data_manager = DataManager()

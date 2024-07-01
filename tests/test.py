@@ -1,7 +1,7 @@
 import unittest
 from Model.user import User
 from Model.place import Places
-from Persistence.datamanager import data_manager
+from Persistence import data_manager
 from API.v1.app import db
 from sqlalchemy.exc import IntegrityError
 

@@ -1,10 +1,11 @@
 import unittest
-from Persistence.datamanager import data_manager
-from Model.user import User
+from Persistence import data_manager
 
 class TestDataManager(unittest.TestCase):
     def setUp(self):
+        from Model import User
         self.user = User(id=1, name="Test User", email="test@example.com")
+        pass
 
     def testsaveandget(self):
         data_manager.save(self.user)
@@ -20,8 +21,9 @@ class TestDataManager(unittest.TestCase):
 
     def test_delete(self):
         data_manager.save(self.user)
-        data_manager.delete(self.user.id, type(self.user).__name__)
-        deleted_user = data_manager.get(self.user.id, type(self.user).__name__)
+        saved_user = data_manager.get(self.user.id, type(self.user).__name__)
+        data_manager.delete(saved_user, type(saved_user).__name__)
+        deleted_user = data_manager.get(saved_user.id, type(saved_user).__name__)
         self.assertIsNone(deleted_user)
 
 if __name__ == '__main__':
