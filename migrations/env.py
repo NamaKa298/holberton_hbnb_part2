@@ -1,4 +1,5 @@
-from API.v1.app import app, db
+from engine.database import db, metadata
+from API.v1.app import app
 app.app_context().push()
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config
@@ -13,7 +14,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-target_metadata = db.Model.metadata
+target_metadata = metadata
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode"""

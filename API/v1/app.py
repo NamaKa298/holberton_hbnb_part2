@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from API.v1.auth import auth as auth_blueprint
 from config import DevelopmentConfig, ProductionConfig, TestingConfig, Config
+from engine.database import db
 import os
 
 
@@ -18,5 +19,4 @@ else:
 app.config['JWT_SECRET_KEY'] = 'motdepasse'
 app.config.from_object(Config)
 app.register_blueprint(auth_blueprint, url_prefix='/auth')
-db = SQLAlchemy(app)
 jwt = JWTManager(app)
