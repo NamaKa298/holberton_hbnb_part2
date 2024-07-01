@@ -1,4 +1,4 @@
-from Model.BaseModel import BaseModel
+from .BaseModel import BaseModel
 from sqlalchemy import Column, String, Integer
 from uuid import uuid4
 

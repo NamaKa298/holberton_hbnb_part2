@@ -1,11 +1,12 @@
 from sqlalchemy import Column, String, DateTime
-from API.v1.app import db
+from engine.database import Base
+from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 import uuid
 
 data = {}
 
-class BaseModel(db.Model):
+class BaseModel(Base):
     """Represent the base class for all models in the application"""
 
     __abstract__ = True
