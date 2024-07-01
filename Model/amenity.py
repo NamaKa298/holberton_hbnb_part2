@@ -1,7 +1,5 @@
-from Model.BaseModel import BaseModel
-from flask_sqlalchemy import SQLAlchemy
+from .BaseModel import BaseModel
 from sqlalchemy import Column, String
-from sqlalchemy.orm import relationship
 
 class Amenity(BaseModel):
     __tablename__ = 'amenities'

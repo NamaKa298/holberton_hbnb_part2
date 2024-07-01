@@ -1,14 +1,15 @@
 from flask import request, jsonify
 from API.v1.app import app
-from Persistence.datamanager import data_manager
 
 @app.route('/countries', methods=['GET'])
 def read_countries():
+    from Persistence import data_manager
     countries = data_manager.read_database("countries")
     return jsonify([country for country in countries]), 200
 
 @app.route('/countries/<country_code>', methods=['GET'])
 def read_country(country_code):
+    from Persistence import data_manager
     countries = data_manager.read_database("countries")
     for country in countries:
         if (country["code"] == country_code):
@@ -17,6 +18,7 @@ def read_country(country_code):
 
 @app.route('/countries/<country_code>/cities', methods=['GET'])
 def read_country_cities(country_code):
+    from Persistence import data_manager
     all_cities = data_manager.all("City")
     country_cities = []
 

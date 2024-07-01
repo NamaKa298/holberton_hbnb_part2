@@ -1,12 +1,12 @@
 from flask_jwt_extended import jwt_required, get_jwt
 from flask import jsonify, request
 from API.v1.app import app
-from Persistence.datamanager import data_manager as amenity_repository
 from Model.amenity import Amenity
 
 @app.route('/amenities', methods=['POST'])
 @jwt_required()
 def create_amenity():
+    from Persistence import data_manager as amenity_repository
     claims = get_jwt()
     if not claims.get('is_admin'):
         return jsonify({"msg": "Administration rights required"}), 403
@@ -17,11 +17,13 @@ def create_amenity():
 
 @app.route('/amenities', methods=['GET'])
 def read_amenities():
+    from Persistence import data_manager as amenity_repository
     amenities = amenity_repository.all("Amenity")
     return jsonify([amenities[id].to_dict() for id in amenities]), 200
 
 @app.route('/amenities/<id>', methods=['GET'])
 def read_amenity(id):
+    from Persistence import data_manager as amenity_repository
     amenity = amenity_repository.get(id, "Amenity")
     if amenity is None:
         return jsonify({"error": "Amenity not found"}), 404
@@ -29,6 +31,7 @@ def read_amenity(id):
 
 @app.route('/amenities/<id>', methods=['PUT'])
 def update_amenity(id):
+    from Persistence import data_manager as amenity_repository
     amenity = amenity_repository.get(id, "Amenity")
     if amenity is None:
         return jsonify({"error": "Amenity not found"}), 404
@@ -38,6 +41,7 @@ def update_amenity(id):
 
 @app.route('/amenities/<id>', methods=['DELETE'])
 def delete_amenity(id):
+    from Persistence import data_manager as amenity_repository
     amenity = amenity_repository.get(id, "Amenity")
     if amenity is None:
         return jsonify({"error": "Amenity not found"}), 404

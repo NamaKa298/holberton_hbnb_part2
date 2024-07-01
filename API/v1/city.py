@@ -1,12 +1,12 @@
 from flask import request, jsonify
 from API.v1.app import app
-from Persistence.datamanager import data_manager as city_repository
 from Model.city import City
 from flask_jwt_extended import jwt_required, get_jwt
 
 @app.route('/cities', methods=['POST'])
 @jwt_required()
 def create_city():
+    from Persistence import data_manager as city_repository
     claims = get_jwt()
     if not claims.get('is_admin'):
         return jsonify({"msg": "Administration rights required"}), 403
@@ -24,11 +24,13 @@ def create_city():
 
 @app.route('/cities', methods=['GET'])
 def read_cities():
+    from Persistence import data_manager as city_repository
     cities = city_repository.all("City")
     return jsonify([cities[id].to_dict() for id in cities]), 200
 
 @app.route('/cities/<id>', methods=['GET'])
 def read_city(id):
+    from Persistence import data_manager as city_repository
     city = city_repository.get(id, "City")
     if city is None:
         return jsonify({"error": "City not found"}), 404
@@ -36,6 +38,7 @@ def read_city(id):
 
 @app.route('/cities/<id>', methods=['PUT'])
 def update_city(id):
+    from Persistence import data_manager as city_repository
     city = city_repository.get(id, "City")
     if city is None:
         return jsonify({"error": "City not found"}), 404
@@ -45,6 +48,7 @@ def update_city(id):
 
 @app.route('/cities/<id>', methods=['DELETE'])
 def delete_city(id):
+    from Persistence import data_manager as city_repository
     city = city_repository.get(id, "City")
     if city is None:
         return jsonify({"error": "City not found"}), 404
