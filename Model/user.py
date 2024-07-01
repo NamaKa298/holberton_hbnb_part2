@@ -14,6 +14,7 @@ class User(BaseModel):
     email = Column(String(120), unique=True, nullable=False)
     password = Column(String(128), nullable=False)
     is_admin = Column(Boolean, default=False)
+    role = Column(String(80), default='user')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

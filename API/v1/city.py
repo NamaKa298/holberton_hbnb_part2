@@ -2,9 +2,14 @@ from flask import request, jsonify
 from API.v1.app import app
 from Persistence.datamanager import data_manager as city_repository
 from Model.city import City
+from flask_jwt_extended import jwt_required, get_jwt
 
 @app.route('/cities', methods=['POST'])
+@jwt_required()
 def create_city():
+    claims = get_jwt()
+    if not claims.get('is_admin'):
+        return jsonify({"msg": "Administration rights required"}), 403
     all_cities = city_repository.all("City")
     data = request.get_json()
     for id in all_cities:

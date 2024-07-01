@@ -5,6 +5,7 @@ from API.v1.auth import auth as auth_blueprint
 from config import DevelopmentConfig, ProductionConfig, TestingConfig, Config
 import os
 
+
 app = Flask(__name__)
 
 if os.getenv('ENV') == 'development':

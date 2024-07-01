@@ -1,7 +1,9 @@
-from flask import request, jsonify
+from flask import request, jsonify, Blueprint
 from API.v1.app import app
 from Persistence.datamanager import data_manager as place_repository
 from Model.place import Place
+
+place_blueprint = Blueprint('place', __name__)
 
 @app.route('/places', methods=['POST'])
 def create_place():
@@ -39,3 +41,15 @@ def delete_place(id):
     place_repository.delete(place, "Place")
     return jsonify({}), 204
 
+@place_blueprint.route('/places', methods=['GET'])
+def get_places():
+    all_places = place_repository.all("Place")  # Assurez-vous que cette méthode renvoie toutes les places
+    return jsonify(all_places), 200
+
+@place_blueprint.route('/places/<place_id>', methods=['GET'])
+def get_place_details(place_id):
+    place = place_repository.find("Place", place_id)  # Implémentez cette recherche dans votre gestionnaire de données
+    if place:
+        return jsonify(place), 200
+    else:
+        return jsonify({"error": "Place not found"}), 404
