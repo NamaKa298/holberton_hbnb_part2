@@ -4,3 +4,4 @@ flask-sqlalchemy
 sqlalchemy
 gunicorn
 Flask-JWT-Extended
+alembic
