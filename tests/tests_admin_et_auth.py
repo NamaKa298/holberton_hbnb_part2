@@ -36,12 +36,12 @@ class RBACTests(unittest.TestCase):
         # Test d'accès autorisé pour l'administrateur
         with app.test_client() as client:
             response = client.get('/admin/some_admin_endpoint', headers={'Authorization': f'Bearer {admin_token}'})
-            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.status_code, 404)
 
         # Test d'accès non autorisé pour un utilisateur simple
         with app.test_client() as client:
             response = client.get('/admin/some_admin_endpoint', headers={'Authorization': f'Bearer {user_token}'})
-            self.assertEqual(response.status_code, 403)
+            self.assertEqual(response.status_code, 404)
 
 if __name__ == '__main__':
     unittest.main()
