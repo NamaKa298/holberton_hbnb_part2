@@ -1,10 +1,15 @@
-from flask import request, jsonify
+from flask_jwt_extended import jwt_required, get_jwt
+from flask import jsonify, request
 from API.v1.app import app
 from Persistence.datamanager import data_manager as amenity_repository
 from Model.amenity import Amenity
 
 @app.route('/amenities', methods=['POST'])
+@jwt_required()
 def create_amenity():
+    claims = get_jwt()
+    if not claims.get('is_admin'):
+        return jsonify({"msg": "Administration rights required"}), 403
     data = request.get_json()
     amenity = Amenity(**data)
     amenity_repository.save(amenity)
