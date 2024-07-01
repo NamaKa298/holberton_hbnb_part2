@@ -3,6 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt
 from API.v1.app import app, db
 
 admin_blueprint = Blueprint('admin', __name__)
+
 @admin_blueprint.route('/admin/data', methods=['POST', 'DELETE'])
 @jwt_required()
 def admin_data():
