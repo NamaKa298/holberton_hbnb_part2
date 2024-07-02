@@ -60,13 +60,6 @@ class MigrationTest(unittest.TestCase):
         except SQLAlchemyError as e:
             self.fail(f"SQLite migration failed: {e}")
 
-    # def test_prod_postgresql_migration(self):
-    #     """Test migrations on PostgreSQL (Production-like environment)"""
-    #     try:
-    #         self.run_alembic_migrations()
-    #     except SQLAlchemyError as e:
-    #         self.fail(f"PostgreSQL migration failed: {e}")
-
     def test_dev_migration_with_rollback(self):
         alembic_cfg = Config("alembic.ini")
         alembic_cfg.set_main_option("sqlalchemy.url", self.db_uri)
