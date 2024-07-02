@@ -67,5 +67,18 @@ class MigrationTest(unittest.TestCase):
     #     except SQLAlchemyError as e:
     #         self.fail(f"PostgreSQL migration failed: {e}")
 
+    def test_dev_migration_with_rollback(self):
+        alembic_cfg = Config("alembic.ini")
+        alembic_cfg.set_main_option("sqlalchemy.url", self.db_uri)
+   
+        try:
+            command.upgrade(alembic_cfg, "head")
+            command.downgrade(alembic_cfg, "-1")
+            command.upgrade(alembic_cfg, "base")
+        
+        except Exception as e:
+           self.fail(f"Migration with rollback failed: {e}")
+
+
 if __name__ == '__main__':
     unittest.main()
