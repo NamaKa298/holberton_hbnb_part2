@@ -1,16 +1,23 @@
-# Utiliser l'image officielle d'Alpine Linux avec Python 3.8
+# Utiliser une image de base légère, par exemple Python 3.8 Alpine
 FROM python:3.8-alpine
-# Installer les dépendances nécessaires pour PostgreSQL
-# gcc et python3-dev sont nécessaires pour compiler certaines dépendances Python
-# postgresql-dev est nécessaire pour PostgreSQL
-RUN apk add --no-cache postgresql-dev gcc python3-dev
-# Copier le reste du code de l'application dans le conteneur
-COPY . /app
+
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app
-# Installer les dépendances
-RUN pip install --no-cache-dir -r requirements.txt
-# Exposer le port 5000
+
+# Copier uniquement le fichier requirements.txt au début pour profiter du caching des couches Docker
+COPY requirements.txt /app/
+
+# Installer les dépendances nécessaires pour MySQL, gcc et python3-dev sont nécessaires pour compiler certaines dépendances Python
+# Il est important de nettoyer après l'installation pour garder l'image légère
+RUN apk add --no-cache --virtual .build-deps gcc python3-dev musl-dev \
+    && pip install --no-cache-dir -r requirements.txt \
+    && apk del .build-deps
+
+# Copier le reste du code de l'application dans le conteneur
+COPY . /app
+
+# Exposer le port sur lequel l'application va tourner
 EXPOSE 5000
-# Configurer Gunicorn pour utiliser le port 5000
+
+# Configurer Gunicorn pour lancer l'application
 CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
