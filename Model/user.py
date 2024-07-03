@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, Boolean, Integer
 from uuid import uuid4
 import re
-from werkzeug.security import generate_password_hash, check_password_hash
+from bcrypt import checkpw, hashpw, gensalt
 
 
 class User(BaseModel):
@@ -25,10 +25,14 @@ class User(BaseModel):
         return bool(re.match(r"[^@]+@[^@]+\.[^@]+", email))
 
     def set_password(self, password):
-        self.password = generate_password_hash(password)
+        bytes = password.encode('utf-8')
+        salt = gensalt()
+        self.password = hashpw(bytes, salt)
 
-    def check_password(self, password):
-        return check_password_hash(self.password, password)
+    @staticmethod
+    def check_password(user, password):
+        bytes = password.encode('utf-8')
+        return checkpw(bytes, user.password.encode('utf-8'))
 
     @classmethod
     def find_by_email(cls, email):

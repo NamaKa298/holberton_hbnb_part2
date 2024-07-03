@@ -3,9 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from API.v1.auth import auth as auth_blueprint
 from config import DevelopmentConfig, ProductionConfig, TestingConfig, Config
-from engine.database import db
 import os
-
 
 app = Flask(__name__)
 
