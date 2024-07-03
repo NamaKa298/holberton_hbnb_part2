@@ -5,3 +5,4 @@ sqlalchemy
 gunicorn
 Flask-JWT-Extended
 alembic
+python-dotenv

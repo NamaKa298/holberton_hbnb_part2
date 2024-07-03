@@ -20,4 +20,4 @@ RUN apk add --no-cache --virtual .build-deps gcc python3-dev musl-dev \
     && apk del .build-deps
 
 # Configurer Gunicorn pour lancer l'application
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "wsgi:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "--timeout", "120", "wsgi:app"]

@@ -1,5 +1,5 @@
-import API.v1
+from API.v1.app import app
 import Model
 
 if __name__ == "__main__":
-    API.v1.app.run()
+    app.run()
