@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from API.v1.app import app
 from Model.user import User
+import logging
 
 @app.route('/users', methods=['POST'])
 def create_user():
@@ -8,6 +9,7 @@ def create_user():
     try:
         data = request.get_json()
         user = User(**data)
+        user.set_password(data["password"])
         user_repository.save(user)
         return jsonify({
             "id": user.id,

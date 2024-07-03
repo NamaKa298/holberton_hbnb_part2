@@ -2,7 +2,7 @@ import unittest
 from Model.user import User
 from Model.place import Places
 from Persistence import data_manager
-from API.v1.app import db
+from engine.database import db
 from sqlalchemy.exc import IntegrityError
 
 class DatabaseOperationsTest(unittest.TestCase):

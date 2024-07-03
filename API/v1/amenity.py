@@ -5,7 +5,7 @@ from Model.amenity import Amenity
 
 @app.route('/amenities', methods=['POST'])
 @jwt_required()
-def create_amenity():
+def create_amenity(): 
     from Persistence import data_manager as amenity_repository
     claims = get_jwt()
     if not claims.get('is_admin'):

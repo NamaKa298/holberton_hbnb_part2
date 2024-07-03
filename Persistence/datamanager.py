@@ -2,7 +2,8 @@ from datetime import datetime
 from typing import TypeVar, List, Dict
 from Persistence.interface_persistence import IPersistenceManager
 from flask_sqlalchemy import SQLAlchemy
-from API.v1.app import db, app
+from API.v1.app import app
+from engine.database import db
 import os
 import json
 

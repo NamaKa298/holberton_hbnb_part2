@@ -12,6 +12,7 @@ WORKDIR /app
 
 # Copier uniquement le fichier requirements.txt au début pour profiter du caching des couches Docker
 COPY requirements.txt /app/
+COPY dev.db /app/
 
 # Installer les dépendances nécessaires pour MySQL, gcc et python3-dev sont nécessaires pour compiler certaines dépendances Python
 # Il est important de nettoyer après l'installation pour garder l'image légère

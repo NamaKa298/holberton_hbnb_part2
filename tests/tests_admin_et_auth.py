@@ -1,5 +1,6 @@
 import unittest
-from API.v1.app import db, app
+from API.v1.app import app
+from engine.database import db
 app.app_context().push()
 from flask_jwt_extended import create_access_token
 
