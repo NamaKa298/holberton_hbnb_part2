@@ -1,4 +1,5 @@
-from myapp import app  # Remplacez 'myapp' par le nom de votre module Flask
+import API.v1
+import Model
 
 if __name__ == "__main__":
-    app.run()
+    API.v1.app.run()

@@ -1,5 +1,11 @@
 # Utiliser une image de base légère, par exemple Python 3.8 Alpine
 FROM python:3.8-alpine
+ENV PYTHONPATH=/app
+# Copier le reste du code de l'application dans le conteneur
+COPY . /app
+
+# Exposer le port sur lequel l'application va tourner
+EXPOSE 5000
 
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app
@@ -13,11 +19,5 @@ RUN apk add --no-cache --virtual .build-deps gcc python3-dev musl-dev \
     && pip install --no-cache-dir -r requirements.txt \
     && apk del .build-deps
 
-# Copier le reste du code de l'application dans le conteneur
-COPY . /app
-
-# Exposer le port sur lequel l'application va tourner
-EXPOSE 5000
-
 # Configurer Gunicorn pour lancer l'application
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "wsgi:app"]
