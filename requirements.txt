@@ -7,4 +7,5 @@ Flask-JWT-Extended
 alembic
 python-dotenv
 pymysql
+cryptography
 bcrypt

@@ -13,7 +13,13 @@ def create_amenity():
     data = request.get_json()
     amenity = Amenity(**data)
     amenity_repository.save(amenity)
-    return jsonify(amenity.to_dict()), 201
+    return jsonify({
+        "id": amenity.id,
+        "name": amenity.name,
+        "description": amenity.description,
+        "created_at": amenity.created_at,
+        "updated_at": amenity.updated_at
+    }), 201
 
 @app.route('/amenities', methods=['GET'])
 def read_amenities():

@@ -16,7 +16,7 @@ COPY dev.db /app/
 
 # Installer les dépendances nécessaires pour MySQL, gcc et python3-dev sont nécessaires pour compiler certaines dépendances Python
 # Il est important de nettoyer après l'installation pour garder l'image légère
-RUN apk add --no-cache --virtual .build-deps gcc python3-dev musl-dev \
+RUN apk add --no-cache --virtual .build-deps gcc python3-dev musl-dev libffi-dev pkgconfig \
     && pip install --no-cache-dir -r requirements.txt \
     && apk del .build-deps
 
